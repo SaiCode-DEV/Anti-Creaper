@@ -19,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 import java.util.Iterator;
 
+import static de.saicode.anticreaper.Anticreeper.DO_CHARGED_CREEPER_EXPLOSIONS_BLOCKDAMAGE;
 import static de.saicode.anticreaper.Anticreeper.DO_CREEPER_EXPLOSIONS_BLOCKDAMAGE;
 
 @Mixin(CreeperEntity.class)
@@ -38,7 +39,9 @@ public abstract class CreeperEntityMixin extends LivingEntity {
         if(!this.getWorld().isClient()) {
             float f = this.dataTracker.get(CHARGED) ? 2.0F : 1.0F;
             this.dead = true;
-            if (!this.getWorld().getGameRules().getBoolean(DO_CREEPER_EXPLOSIONS_BLOCKDAMAGE)) {
+            if (!this.getWorld().getGameRules().getBoolean(DO_CREEPER_EXPLOSIONS_BLOCKDAMAGE) && !this.dataTracker.get(CHARGED)) {
+                this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), (float) this.explosionRadius * f, World.ExplosionSourceType.NONE);
+            } else if (!this.getWorld().getGameRules().getBoolean(DO_CHARGED_CREEPER_EXPLOSIONS_BLOCKDAMAGE) && this.dataTracker.get(CHARGED)) {
                 this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, World.ExplosionSourceType.NONE);
             } else {
                 this.getWorld().createExplosion(this, this.getX(), this.getY(), this.getZ(), (float)this.explosionRadius * f, World.ExplosionSourceType.MOB);
