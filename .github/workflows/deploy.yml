@@ -1,14 +1,7 @@
 name: Build and Deploy
 
 on:
-  push:
-    branches:
-      - 'main'
-    tags:
-      - 'v*'
-  pull_request:
-    branches:
-      - 'main'
+  workflow_dispatch:  # Manueller Trigger
 
 jobs:
   # Erster Job: Build
@@ -38,7 +31,7 @@ jobs:
           name: Artifacts
           path: build/libs/
 
-  # Zweiter Job: Deploy, abhängig vom Build-Job
+  # Zweiter Job: GitHub Release und Deployment
   deploy:
     runs-on: ubuntu-22.04
     needs: build  # Der Deploy-Job wird nur ausgeführt, wenn der Build-Job erfolgreich war
@@ -47,6 +40,21 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Artifacts
+      
+      # Schritt zur Erstellung eines GitHub-Releases
+      - name: Create GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: "v1.0.0"  # Hier kannst du die Version oder den Tag dynamisch festlegen
+          release_name: "Release v1.0.0"
+          body: "Beschreibung des Releases"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Deployment Schritt zu Modrinth
       - name: deploy to modrinth
         uses: Kir-Antipov/mc-publish@v3.3
         with:
