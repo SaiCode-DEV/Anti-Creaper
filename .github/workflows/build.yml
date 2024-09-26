@@ -40,9 +40,3 @@ jobs:
         with:
           name: Artifacts
           path: build/libs/
-      - uses: Kir-Antipov/mc-publish@v3.3
-        with:
-          modrinth-id: Uqqp9wzq
-          modrinth-featured: true
-          modrinth-unfeature-mode: subset
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
