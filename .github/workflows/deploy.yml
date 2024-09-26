@@ -32,7 +32,7 @@ jobs:
           path: build/libs/
 
   # Zweiter Job: GitHub Release und Deployment
-  deploy:
+  deploy-gh:
     runs-on: ubuntu-22.04
     needs: build  # Der Deploy-Job wird nur ausgeführt, wenn der Build-Job erfolgreich war
     steps:
@@ -61,8 +61,24 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # Deployment Schritt zu Modrinth
-      - name: deploy to modrinth
+      - name: Upload Release Assets
+        run: |
+          for file in *.jar; do
+            gh release upload "${{ steps.create_release.outputs.id }}" "$file" --clobber
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-modrinth:
+    runs-on: ubuntu-22.04
+    needs: build  # Der Deploy-Job wird nur ausgeführt, wenn der Build-Job erfolgreich war
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: Artifacts
+
+      - name: Deploy to modrinth
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           modrinth-id: Uqqp9wzq
