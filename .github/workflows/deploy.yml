@@ -30,67 +30,6 @@ jobs:
           name: Artifacts
           path: build/libs/
 
-  # Zweiter Job: GitHub Release und Deployment
-  deploy-gh:
-    name: Deploy to GitHub
-    runs-on: ubuntu-22.04
-    needs: build  # Der Deploy-Job wird nur ausgeführt, wenn der Build-Job erfolgreich war
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: Artifacts
-
-      - name: Extract version from JAR filename
-        id: extract_version
-        run: |
-          JAR_FILE=$(ls *.jar | grep -E 'anti-creeper-.*\.jar' | head -n 1)
-          VERSION=${JAR_FILE#anti-creeper-}
-          VERSION=${VERSION/-sources/}
-          VERSION=${VERSION%.jar}
-          echo "Extracted version: $VERSION"
-          echo "::set-output name=version::$VERSION"
-
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ steps.extract_version.outputs.version }}
-          release_name: "Release ${{ steps.extract_version.outputs.version }}"
-          body: "Beschreibung des Releases"
-          draft: true
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Assets
-        run: |
-          for file in *.jar; do
-            gh release upload "${{ steps.create_release.outputs.id }}" "$file" --clobber
-          done
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  deploy:
-    name: Deploy to Modrinth
-    runs-on: ubuntu-22.04
-    needs: build  # Der Deploy-Job wird nur ausgeführt, wenn der Build-Job erfolgreich war
-    steps:
-      - name: Download build artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: Artifacts
-      
-      - name: Extract version from JAR filename
-        id: extract_version
-        run: |
-          JAR_FILE=$(ls *.jar | grep -E 'anti-creeper-.*\.jar' | head -n 1)
-          VERSION=${JAR_FILE#anti-creeper-}
-          VERSION=${VERSION/-sources/}
-          VERSION=${VERSION%.jar}
-          echo "Extracted version: $VERSION"
-          echo "::set-output name=version::$VERSION"
-
       - name: Deploy to modrinth
         uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -98,7 +37,4 @@ jobs:
           modrinth-featured: true
           modrinth-unfeature-mode: subset
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
-          version: ${{ steps.extract_version.outputs.version }}
-          files: |
-            *-@(dev|sources|javadoc).jar
           
