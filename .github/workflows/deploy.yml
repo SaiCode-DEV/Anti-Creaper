@@ -41,19 +41,22 @@ jobs:
         with:
           name: Artifacts
 
-      - name: List files in build/libs
+      - name: Extract version from JAR filename
+        id: extract_version
         run: |
-          echo "Listing files in build/libs directory:"
-          ls -l .
-      # Schritt zur Erstellung eines GitHub-Releases
+          JAR_FILE=$(ls *.jar | grep -E 'anti-creeper-.*\.jar' | head -n 1)
+          VERSION=${JAR_FILE#anti-creeper-}
+          VERSION=${VERSION%.jar}
+          echo "Extracted version: $VERSION"
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: "v1.0.0"  # Hier kannst du die Version oder den Tag dynamisch festlegen
-          release_name: "Release v1.0.0"
+          tag_name: ${{ steps.extract_version.outputs.version }}
+          release_name: "Release ${{ steps.extract_version.outputs.version }}"
           body: "Beschreibung des Releases"
-          draft: false
+          draft: true
           prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -66,3 +69,6 @@ jobs:
           modrinth-featured: true
           modrinth-unfeature-mode: subset
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: |
+            *-@(dev|sources|javadoc).jar
+          
