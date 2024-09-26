@@ -40,7 +40,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: Artifacts
-      
+
+      - name: List files in build/libs
+        run: |
+          echo "Listing files in build/libs directory:"
+          ls -l .
       # Schritt zur Erstellung eines GitHub-Releases
       - name: Create GitHub Release
         id: create_release
