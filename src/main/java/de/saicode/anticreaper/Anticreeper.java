@@ -13,6 +13,7 @@ public class Anticreeper implements ModInitializer {
 
 	public  static final GameRules.Key<GameRules.BooleanRule> DO_CREEPER_EXPLOSIONS_BLOCKDAMAGE = GameRuleRegistry.register("doCreeperExplosionsBlockDamage", GameRules.Category.MOBS, GameRuleFactory.createBooleanRule(false));
 	public  static final GameRules.Key<GameRules.BooleanRule> DO_CHARGED_CREEPER_EXPLOSIONS_BLOCKDAMAGE = GameRuleRegistry.register("doChargedCreeperExplosionsBlockDamage", GameRules.Category.MOBS, GameRuleFactory.createBooleanRule(false));
+	public  static final GameRules.Key<GameRules.BooleanRule> DO_EXPLOSIONS_DECORATION_DAMAGE = GameRuleRegistry.register("doExplosionsDecorationDamage", GameRules.Category.MOBS, GameRuleFactory.createBooleanRule(false));
 
 	// This logger is used to write text to the console and the log file.
 	// It is considered best practice to use your mod id as the logger's name.

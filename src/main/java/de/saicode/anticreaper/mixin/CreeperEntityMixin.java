@@ -17,7 +17,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import static de.saicode.anticreaper.Anticreeper.DO_CHARGED_CREEPER_EXPLOSIONS_BLOCKDAMAGE;
 import static de.saicode.anticreaper.Anticreeper.DO_CREEPER_EXPLOSIONS_BLOCKDAMAGE;

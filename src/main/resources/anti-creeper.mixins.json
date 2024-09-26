@@ -3,7 +3,8 @@
 	"package": "de.saicode.anticreaper.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"CreeperEntityMixin"
+		"CreeperEntityMixin",
+		"ExplosionMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1
