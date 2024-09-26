@@ -15,8 +15,7 @@
     alt="Modrinth Downloads">
 </img>
 </div>
-
-# Prevent Creeper Block and Entity Damage
+<h1 align="center"> Prevent Creeper Block and Entity Damage </h1>
 
 ![Creeper exploding Meme](https://github.com/user-attachments/assets/7d2541a3-0bb8-4885-a80a-e4134c8b11f1)
 
